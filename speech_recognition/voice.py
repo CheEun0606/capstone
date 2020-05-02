@@ -16,7 +16,6 @@ bad이면 어펙티바로 bad 전송
 9. 난수 중복안되게 !! 
 '''
 
-
 import speech_recognition as spr
 import requests
 from collections import Counter
