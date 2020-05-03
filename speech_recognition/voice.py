@@ -16,6 +16,7 @@ bad이면 어펙티바로 bad 전송
 9. 난수 중복안되게 !! 
 '''
 
+#필요한 것들 import 해주기
 import speech_recognition as spr
 import requests
 from collections import Counter
@@ -112,7 +113,7 @@ def soundplot(stream):
     
     while 1:
         data = np.frombuffer(stream.read(CHUNK),dtype=np.int16)
-        peak=np.average(np.abs(data))*2
+        peak=np.average(np.abs(data))*2 # 왜 곱하기 2 하는지?
         print("peak %04d"%(peak))
         if (peak<300 and peak>60):
             print("더 크게 말해주세요")
@@ -122,7 +123,7 @@ def soundplot(stream):
         elif (peak>310 and peak<3000):
             interview(stream)
 
-
+#이건 안쓰는거?
 def soundcheck(stream):
     
     while 1:
