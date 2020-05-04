@@ -1,7 +1,7 @@
 '''
-면접관 모드 파이썬 코드
-음성 결과에 대해 점수를 매기는 방식임.
-키워드 값 제대로 인식부터 하고, good 이면 affectiva로 키워드 전송
+면접관 모드 파이썬 코드 
+음성 결과에 대해 점수를 매기는 방식임. 
+키워드 값 제대로 인식부터 하고, good 이면 어펙티바로 키워드 전송
 bad 이면 어펙티바로 키워드 전송
 bad이면 어펙티바로 bad 전송
 1. 단, 클로바 더빙이 잘 적용되어 있어야함. -> 이건 기업체 미팅 이후로 미루기 
@@ -340,8 +340,8 @@ def sr(stream):
         
     try:
             # recognize speech using Google Speech Recognition
-        value = recog.recognize_google(audio,language="ko-KR")
-        print("You said {}".format(value))
+        #value = recog.recognize_google(audio,language="ko-KR")
+        #print("You said {}".format(value))
            
         #demo = classify(value)
         '''
@@ -351,7 +351,7 @@ def sr(stream):
         print ("result: '%s' with %d%% confidence" % (label, confidence))
         '''
         data = np.frombuffer(stream.read(CHUNK),dtype=np.int16)
-        '''
+        
         fft = abs(np.fft.fft(data).real)
         #fft = fft[:int(len(fft)/2)] # keep only first half
         freq = np.fft.fftfreq(CHUNK,1.0/RATE)
@@ -359,9 +359,9 @@ def sr(stream):
         freq = freq[:int(len(freq)/2)] # keep only first half
         
         
-        #freqPeak = freq[np.where(fft==np.max(fft))[0][0]]+1
+        freqPeak = freq[np.where(fft==np.max(fft))[0][0]]+1
         print("peak frequency: %d Hz"%freqPeak)
-        '''
+        
         '''
         msg = label
         data = msg.encode();   
