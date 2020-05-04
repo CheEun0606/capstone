@@ -350,6 +350,8 @@ def sr(stream):
         confidence = demo["confidence"]
         print ("result: '%s' with %d%% confidence" % (label, confidence))
         '''
+
+#여기서부터 fft 분석 다시 해보기
         data = np.frombuffer(stream.read(CHUNK),dtype=np.int16)
         
         fft = abs(np.fft.fft(data).real)
