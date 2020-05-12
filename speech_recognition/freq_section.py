@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 
 np.set_printoptions(suppress=True) # don't use scientific notation
 
+#CHUNK 조절로 측정 속도 조절
 CHUNK = 4096 # number of data points to read at a time
 RATE = 44100 # time resolution of the recording device (Hz)
 
