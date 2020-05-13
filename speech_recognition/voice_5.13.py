@@ -112,8 +112,8 @@ def soundplot(stream):
         if (peak<300 and peak>60):
             print("더 크게 말해주세요")
             #os.system("start 1.mp3")
-            speak = wincl.Dispatch("SAPI.SpVoice")
-            speak.Speak("잘 들리지 않습니다. 더 크게 말해주세요")
+            #speak = wincl.Dispatch("SAPI.SpVoice")
+            #speak.Speak("잘 들리지 않습니다. 더 크게 말해주세요")
         elif (peak>310 and peak<3000):
             interview(stream)
 
@@ -315,8 +315,11 @@ def interview(stream):
 # 주파수 측정    
 def freq(r):
     freqArray = []
+    volumeArray = []
     for i in range(r): #to it a few times just to see
         data = np.fromstring(stream.read(CHUNK),dtype=np.int16)
+        volume = np.average(np.abs(data))/2
+        #print("volume %04d"%(volume))
         data = data * np.hanning(len(data)) # smooth the FFT by windowing data
         fft = abs(np.fft.fft(data).real)
         fft = fft[:int(len(fft)/2)] # keep only first half
@@ -324,11 +327,15 @@ def freq(r):
         freq = freq[:int(len(freq)/2)] # keep only first half
         freqPeak = freq[np.where(fft==np.max(fft))[0][0]]+1
         #print("peak frequency: %d Hz"%freqPeak)
-        #if(100<freqPeak<300):
-        freqArray.append(freqPeak)
+        if(90<freqPeak<320):
+            freqArray.append(freqPeak)
+        if (300>volume>50):
+            volumeArray.append(volume)
     freq_avg = sum(freqArray, 0.0)/len(freqArray) #한 텀에서 freq 평균값
-    #print("freq average : %d"%freq_avg)        
-    print(freq_avg)
+    volume_avg = sum(volumeArray, 0.0)/len(volumeArray)
+    print("freq average : %d"%freq_avg)
+    print("volume average : %d"%volume_avg)        
+    #print(freq_avg)
  
 '''            
 def rec(limit):
@@ -359,11 +366,8 @@ def sr(stream):
     
     with mc as source: audio = recog.listen(source,stream=='True', phrase_time_limit=5)
     
-    #t1 = threading.Thread(target=rec, args=(5,))
-    #t1.start()     
     
     t.join();
-    #t1.join();
         
     print("Got it! Now to recognize it...")
         
