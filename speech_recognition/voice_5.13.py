@@ -1,8 +1,5 @@
 '''
-면접관 모드 파이썬 코드
-음성 결과에 대해 점수를 매기는 방식임
-키워드 값 제대로 인식부터 하고, good이면 어펙티바로 키워드 전송
-bad 이면 어펙티바로 키워드 전송
+d 이면 어펙티바로 키워드 전송
 bad이면 어펙티바로 bad 전송
 1. 단, 클로바 더빙이 잘 적용되어 있어야함. -> 이건 기업체 미팅 이후로 미루기 
 2. //또한, 사전에 이름을 입력하고 이걸 바로 출력해서 질문을 할 수 있어야 함.
@@ -39,7 +36,7 @@ import threading
 pyximport.install()
 
 RATE = 44100        # time resolution of the recording device (Hz)
-CHUNK = int(RATE/2) # RATE / number of updates per second
+CHUNK = int(RATE/16) # RATE / number of updates per second
 TARGET = 2100
 # 1. 주파수 max-> mean값으로 수정
 # 2. 음성 Sapivoice에서 음성파일 출력으로 
@@ -314,8 +311,10 @@ def interview(stream):
     elif(result >250):
         speak.Speak("조금만 더 잘 준비해봅시다.")
     '''
-    
-def sum(r):
+
+# 주파수 측정    
+def freq(r):
+    freqArray = []
     for i in range(r): #to it a few times just to see
         data = np.fromstring(stream.read(CHUNK),dtype=np.int16)
         data = data * np.hanning(len(data)) # smooth the FFT by windowing data
@@ -324,9 +323,14 @@ def sum(r):
         freq = np.fft.fftfreq(CHUNK,1.0/RATE)
         freq = freq[:int(len(freq)/2)] # keep only first half
         freqPeak = freq[np.where(fft==np.max(fft))[0][0]]+1
-        print("peak frequency: %d Hz"%freqPeak)
-        
-''''             
+        #print("peak frequency: %d Hz"%freqPeak)
+        #if(100<freqPeak<300):
+        freqArray.append(freqPeak)
+    freq_avg = sum(freqArray, 0.0)/len(freqArray) #한 텀에서 freq 평균값
+    #print("freq average : %d"%freq_avg)        
+    print(freq_avg)
+ 
+'''            
 def rec(limit):
     with mc as source: audio = recog.listen(source,stream=='True', phrase_time_limit=limit)
     print("rec!!!!!!!!!")
@@ -350,7 +354,7 @@ def sr(stream):
         freqPeak = freq[np.where(fft==np.max(fft))[0][0]]+1
         print("peak frequency: %d Hz"%freqPeak)    
     '''
-    t = threading.Thread(target=sum, args=(12,))
+    t = threading.Thread(target=freq, args=(96,))
     t.start()
     
     with mc as source: audio = recog.listen(source,stream=='True', phrase_time_limit=5)
@@ -367,6 +371,15 @@ def sr(stream):
             # recognize speech using Google Speech Recognition
         value = recog.recognize_google(audio,language="ko-KR")
         print("You said {}".format(value))
+        
+        #음성 빠르기 체크    
+        val_len = len(value)
+        print(val_len)
+        if(val_len<7):
+            print("말이 너무 느립니다!")
+        elif(val_len>40):
+            print("말이 너무 빠릅니다!")
+        
            
         demo = classify(value)
             
