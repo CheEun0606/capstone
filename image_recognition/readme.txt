@@ -1,2 +1,3 @@
 This project offers image recognition and speech recognition.
-Affectiva -> Face Controller -> Avatar & Robot Motor
+Python(speech_recognition)
+-> Affectiva -> Face Controller -> Avatar & Robot Motor
